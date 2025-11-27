@@ -20,7 +20,7 @@
                 font-size: 12pt;
             }
             
-            .header, .project-name-section, .section, .comparison, .reset-btn, .print-btn-container {
+            .header, .project-name-section, .section, .comparison, .reset-btn, .print-btn-container, .tab-nav, #tab-education {
                 display: none !important;
             }
             
@@ -682,6 +682,345 @@
             cursor: pointer;
         }
 
+        /* Don't Forget Section */
+        .forget-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .forget-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .forget-item:has(input[type="checkbox"]:checked) {
+            border-color: var(--accent-orange);
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        .forget-checkbox {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .forget-checkbox input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .forget-checkbox .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .forget-checkbox input:checked ~ .checkmark {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        .forget-checkbox .checkmark:after {
+            content: '';
+            position: absolute;
+            display: none;
+            left: 9px;
+            top: 4px;
+            width: 6px;
+            height: 12px;
+            border: solid var(--bg-primary);
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+
+        .forget-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .forget-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .forget-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .forget-desc {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .forget-hours {
+            width: 60px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--accent-yellow);
+            text-align: center;
+        }
+
+        .forget-hours:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+        }
+
+        .forget-hrs-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            width: 24px;
+        }
+
+        /* Education Section */
+        .education-section .section-header h2 {
+            color: #64b5f6;
+        }
+
+        .edu-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid;
+        }
+
+        .edu-card.warning {
+            background: rgba(255, 152, 0, 0.1);
+            border-color: var(--accent-orange);
+        }
+
+        .edu-card.stat {
+            background: rgba(100, 181, 246, 0.1);
+            border-color: #64b5f6;
+        }
+
+        .edu-card.myth {
+            background: rgba(244, 67, 54, 0.1);
+            border-color: var(--bad-red);
+        }
+
+        .edu-card.info {
+            background: var(--bg-input);
+            border-color: var(--border-color);
+        }
+
+        .edu-card.success {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: var(--good-green);
+        }
+
+        .edu-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            width: 40px;
+            text-align: center;
+        }
+
+        .edu-stat-number {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: #64b5f6;
+            flex-shrink: 0;
+            width: 100px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .edu-content {
+            flex: 1;
+        }
+
+        .edu-content h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .edu-content p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .edu-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .edu-content strong {
+            color: var(--text-primary);
+        }
+
+        .edu-content cite {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        .edu-content ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .edu-content li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .edu-divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .edu-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .edu-divider span {
+            background: var(--bg-card);
+            padding: 0 16px;
+            position: relative;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .edu-quote {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .edu-quote::before {
+            content: '"';
+            font-family: Georgia, serif;
+            font-size: 4rem;
+            color: var(--accent-yellow);
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            line-height: 1;
+            opacity: 0.5;
+        }
+
+        .edu-quote blockquote {
+            font-size: 1rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin: 0;
+            padding-left: 30px;
+        }
+
+        .edu-quote cite {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-left: 30px;
+            font-style: normal;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: var(--bg-secondary);
+            border-bottom: 3px solid var(--accent-yellow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tab-btn span.tab-icon {
+            font-size: 1.3rem;
+        }
+
+        .tab-btn.active {
+            background: var(--bg-primary);
+            color: var(--accent-yellow);
+            border-bottom: 3px solid var(--accent-yellow);
+            margin-bottom: -3px;
+        }
+
+        .tab-btn:not(.active):hover {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Education tab specific */
+        .education-tab {
+            padding: 16px;
+        }
+
+        .education-tab .section-content {
+            padding: 0;
+        }
+
         /* Utility */
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
@@ -743,6 +1082,21 @@
         <h1>HELLS CANYON HANDYMAN</h1>
         <div style="font-size: 0.75rem; color: #a0a0a0; letter-spacing: 2px; margin-top: 4px;">JOB ESTIMATOR</div>
     </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('calculator')">
+            <span class="tab-icon">🧮</span>
+            CALCULATOR
+        </button>
+        <button class="tab-btn" onclick="switchTab('education')">
+            <span class="tab-icon">📚</span>
+            WHY THIS MATTERS
+        </button>
+    </nav>
+
+    <!-- Calculator Tab -->
+    <div id="tab-calculator" class="tab-content active">
 
     <div class="project-name-section">
         <input type="text" class="project-name-input" id="projectName" placeholder="Project name (e.g., YMCA Breezeway)">
@@ -846,6 +1200,164 @@
                     <div class="section-totals-item recommended">
                         <small>w/ Markup</small>
                         <span id="suppliesRecTotal">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Don't Forget Section -->
+    <section class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <h2>⚠️ Don't Forget!</h2>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="section-content">
+            <div class="info-text">
+                <strong>These kill your profit!</strong> Check the ones that apply — hours are added to your labor automatically.
+            </div>
+            <div class="forget-items" id="forgetContainer">
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-travel" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🚗 Travel Time (round trip)</span>
+                        <span class="forget-desc">Drive to site and back home</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-travel-hrs" value="1" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-pickup" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🏪 Material Pickup Run</span>
+                        <span class="forget-desc">Trip to hardware store / supplier</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-pickup-hrs" value="1.5" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-meeting" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🤝 Client Meeting / Walkthrough</span>
+                        <span class="forget-desc">Initial consult, mid-project check-ins</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-meeting-hrs" value="1" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-setup" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🧹 Setup & Cleanup</span>
+                        <span class="forget-desc">Unload tools, protect surfaces, clean up daily</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-setup-hrs" value="1" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-dump" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🗑️ Dump Run / Debris Disposal</span>
+                        <span class="forget-desc">Haul away trash, old materials</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-dump-hrs" value="1.5" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-permit" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">📋 Permit / Inspection Time</span>
+                        <span class="forget-desc">Apply for permits, wait for inspector</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-permit-hrs" value="2" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-estimate" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">📝 Estimate / Quote Prep</span>
+                        <span class="forget-desc">Time spent creating this estimate!</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-estimate-hrs" value="0.5" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-phone" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">📱 Phone Calls / Coordination</span>
+                        <span class="forget-desc">Calls with client, suppliers, subs</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-phone-hrs" value="0.5" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-weather" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🌧️ Weather Delay Buffer</span>
+                        <span class="forget-desc">Extra time for outdoor work</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-weather-hrs" value="2" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+
+                <div class="forget-item">
+                    <label class="forget-checkbox">
+                        <input type="checkbox" id="forget-warranty" onchange="calculate()">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="forget-details">
+                        <span class="forget-label">🔧 Warranty / Callback Buffer</span>
+                        <span class="forget-desc">Return trip for touch-ups, fixes</span>
+                    </div>
+                    <input type="number" class="forget-hours" id="forget-warranty-hrs" value="1" step="0.5" min="0" oninput="calculate()">
+                    <span class="forget-hrs-label">hrs</span>
+                </div>
+            </div>
+
+            <div class="section-totals">
+                <span class="section-totals-label">Hidden Hours Total</span>
+                <div class="section-totals-values">
+                    <div class="section-totals-item recommended">
+                        <small>Added to Labor</small>
+                        <span id="forgetTotalHours">0 hrs</span>
+                    </div>
+                    <div class="section-totals-item recommended">
+                        <small>Value</small>
+                        <span id="forgetTotalValue">$0</span>
                     </div>
                 </div>
             </div>
@@ -1003,7 +1515,186 @@
 
     <button class="reset-btn" onclick="resetProject()">🗑️ Clear Project & Start New</button>
 
+    </div><!-- End Calculator Tab -->
+
+    <!-- Education Tab -->
+    <div id="tab-education" class="tab-content education-tab">
+        
+        <div class="edu-card warning">
+            <div class="edu-icon">⚠️</div>
+            <div class="edu-content">
+                <h3>You're Not Overcharging — You're Finally Charging Right</h3>
+                <p>If this calculator's "Recommended" price feels high, that's because you've been <strong>undercharging for years</strong>. Every successful contractor charges this way. The ones who don't? They go out of business.</p>
+            </div>
+        </div>
+
+        <div class="edu-card stat">
+            <div class="edu-stat-number">54%</div>
+            <div class="edu-content">
+                <h3>Typical Contractor Overhead</h3>
+                <p>Industry research shows remodeling contractors have overhead expenses ranging from <strong>25% to 54%</strong> of their revenue. That's your truck, tools, insurance, phone, fuel, licensing — all the stuff you pay for whether you're working or not.</p>
+                <cite>— Markup & Profit, Construction Business Research</cite>
+            </div>
+        </div>
+
+        <div class="edu-card stat">
+            <div class="edu-stat-number">$50-150</div>
+            <div class="edu-content">
+                <h3>What Contractors Actually Charge Per Hour</h3>
+                <p>Homeowners pay between <strong>$50 and $150 per hour</strong> for general contractor work, with rates going up to $200 for experienced contractors or complex work. If you're charging less, you're leaving money on the table.</p>
+                <cite>— Angi (formerly Angie's List), 2025 Data</cite>
+            </div>
+        </div>
+
+        <div class="edu-card myth">
+            <div class="edu-icon">🚫</div>
+            <div class="edu-content">
+                <h3>The "10 and 10" Myth</h3>
+                <p>You may have heard contractors should charge "10% overhead and 10% profit." <strong>This is a myth that puts contractors out of business.</strong> It started somewhere and spread, but no successful contractor actually operates this way. Real overhead is 25-40%, and you deserve 10-20% profit on top of that.</p>
+                <cite>— "There is No Industry Standard" — Markup & Profit</cite>
+            </div>
+        </div>
+
+        <div class="edu-card stat">
+            <div class="edu-stat-number">6%</div>
+            <div class="edu-content">
+                <h3>Average Contractor Profit Margin</h3>
+                <p>The average construction profit margin is only <strong>6%</strong>. That's dangerously thin. Industry experts recommend targeting <strong>10-20% profit</strong> to stay in business through slow periods and grow your company.</p>
+                <cite>— Buildertrend Industry Research</cite>
+            </div>
+        </div>
+
+        <div class="edu-card warning">
+            <div class="edu-icon">💀</div>
+            <div class="edu-content">
+                <h3>Why Contractors Fail</h3>
+                <p>The National Association of Home Builders found that their "best" remodeling contractors averaged <strong>under 4% net profit</strong>. Many contractors make NO profit at all. That's why so many construction businesses fail — they're busy, but they're not making money.</p>
+                <cite>— NAHB Remodeling Report</cite>
+            </div>
+        </div>
+
+        <div class="edu-divider">
+            <span>THE HIDDEN HOURS</span>
+        </div>
+
+        <div class="edu-card info">
+            <div class="edu-icon">🚗</div>
+            <div class="edu-content">
+                <h3>Travel Time is Billable</h3>
+                <p>Every contractor charges for travel. Your truck costs money to run. Your time has value. If you drive 30 minutes each way, that's an hour of your day — <strong>you should be paid for it</strong>. Clients expect this.</p>
+            </div>
+        </div>
+
+        <div class="edu-card info">
+            <div class="edu-icon">🏪</div>
+            <div class="edu-content">
+                <h3>Material Runs Are Billable</h3>
+                <p>When you run to the hardware store, that's work. You're using your truck, your fuel, your time, and your expertise to get the right materials. <strong>Charge for it.</strong> Most contractors add 1-2 hours per job for material procurement.</p>
+            </div>
+        </div>
+
+        <div class="edu-card info">
+            <div class="edu-icon">🤝</div>
+            <div class="edu-content">
+                <h3>Meetings & Estimates Are Work</h3>
+                <p>The time you spend meeting with clients, doing walkthroughs, creating estimates — that's skilled work. You're providing expertise. Many contractors charge for estimates, or build that time into their projects. <strong>Your knowledge has value.</strong></p>
+            </div>
+        </div>
+
+        <div class="edu-card info">
+            <div class="edu-icon">🧹</div>
+            <div class="edu-content">
+                <h3>Setup & Cleanup Takes Time</h3>
+                <p>Unloading tools, protecting floors and furniture, cleaning up at the end of each day — this isn't free time. Professional contractors include <strong>30-60 minutes per day</strong> for setup and cleanup in their estimates.</p>
+            </div>
+        </div>
+
+        <div class="edu-card info">
+            <div class="edu-icon">📱</div>
+            <div class="edu-content">
+                <h3>Phone Calls & Coordination Add Up</h3>
+                <p>Texts with the client, calls to suppliers, coordinating schedules — it might feel like "just a few minutes" but it adds up to hours per job. <strong>Track it and charge for it.</strong></p>
+            </div>
+        </div>
+
+        <div class="edu-divider">
+            <span>THE BOTTOM LINE</span>
+        </div>
+
+        <div class="edu-card success">
+            <div class="edu-icon">✅</div>
+            <div class="edu-content">
+                <h3>You Deserve to Make Money</h3>
+                <p>You're skilled. You're licensed. You show up on time and do quality work. Your clients are getting a professional service — they expect to pay professional rates. <strong>Charging correctly isn't greedy, it's how you stay in business to help more people.</strong></p>
+            </div>
+        </div>
+
+        <div class="edu-card success">
+            <div class="edu-icon">💰</div>
+            <div class="edu-content">
+                <h3>What This Calculator Does</h3>
+                <p>This tool applies the same pricing formula that successful contractors use:</p>
+                <ul>
+                    <li><strong>Base Rate</strong> — What you pay yourself per hour</li>
+                    <li><strong>+ Overhead (25-40%)</strong> — Your real business costs</li>
+                    <li><strong>+ Profit (10-20%)</strong> — What you keep for growth & security</li>
+                    <li><strong>+ Time Buffer (25%)</strong> — Because jobs always take longer</li>
+                    <li><strong>+ Materials Markup (15-25%)</strong> — For procurement & handling</li>
+                    <li><strong>+ Contingency (10%)</strong> — For the unexpected</li>
+                </ul>
+                <p>This isn't padding. <strong>This is how profitable businesses operate.</strong></p>
+            </div>
+        </div>
+
+        <div class="edu-quote">
+            <blockquote>
+                "I didn't understand what my costs were. I didn't understand what my overhead was. I was getting 90% of the jobs I bid, and I thought I was just the world's greatest businessman. The reality was I was undercharging for really good quality work."
+            </blockquote>
+            <cite>— Michael McSweeney, General Contractor, California Homebuilding Foundation</cite>
+        </div>
+
+        <div class="edu-card warning">
+            <div class="edu-icon">🎯</div>
+            <div class="edu-content">
+                <h3>The Real Test</h3>
+                <p>If you're winning 90%+ of your bids, <strong>you're charging too little</strong>. Successful contractors win about 25-35% of their bids. The rest go to someone cheaper — and that's fine. You want customers who value quality, not the ones hunting for the cheapest option.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+            <button class="print-btn" onclick="switchTab('calculator')" style="max-width: 300px; margin: 0 auto;">
+                🧮 GO TO CALCULATOR
+            </button>
+        </div>
+
+    </div><!-- End Education Tab -->
+
     <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tab-btn')?.classList.add('active');
+            
+            // For the "GO TO CALCULATOR" button in education tab
+            if (tabName === 'calculator') {
+                document.querySelector('.tab-btn:first-child').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:last-child').classList.add('active');
+            }
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
         // Data storage
         let supplies = [];
         let labor = [];
@@ -1065,9 +1756,30 @@
                     addLabor(l.name, l.hours);
                 });
             }
+            // Restore Don't Forget checkboxes
+            if (project.forget) {
+                Object.keys(project.forget).forEach(item => {
+                    const checkbox = document.getElementById(`forget-${item}`);
+                    const hoursInput = document.getElementById(`forget-${item}-hrs`);
+                    if (checkbox) checkbox.checked = project.forget[item].checked;
+                    if (hoursInput && project.forget[item].hours) hoursInput.value = project.forget[item].hours;
+                });
+            }
         }
 
         function saveProject() {
+            // Save Don't Forget checkboxes
+            const forgetItems = ['travel', 'pickup', 'meeting', 'setup', 'dump', 'permit', 'estimate', 'phone', 'weather', 'warranty'];
+            const forgetState = {};
+            forgetItems.forEach(item => {
+                const checkbox = document.getElementById(`forget-${item}`);
+                const hoursInput = document.getElementById(`forget-${item}-hrs`);
+                forgetState[item] = {
+                    checked: checkbox ? checkbox.checked : false,
+                    hours: hoursInput ? parseFloat(hoursInput.value) || 0 : 0
+                };
+            });
+
             const project = {
                 name: document.getElementById('projectName').value,
                 supplies: supplies.map(s => ({
@@ -1078,7 +1790,8 @@
                 labor: labor.map(l => ({
                     name: document.getElementById(`labor-name-${l.id}`)?.value || '',
                     hours: parseFloat(document.getElementById(`labor-hours-${l.id}`)?.value) || 0
-                }))
+                })),
+                forget: forgetState
             };
             localStorage.setItem('currentProject', JSON.stringify(project));
         }
@@ -1230,6 +1943,30 @@
                 if (recEl) recEl.value = recHours.toFixed(1) + ' hrs';
             });
 
+            // Calculate "Don't Forget" hours - these get added to recommended labor
+            const forgetItems = [
+                'travel', 'pickup', 'meeting', 'setup', 'dump', 
+                'permit', 'estimate', 'phone', 'weather', 'warranty'
+            ];
+            
+            let forgetTotalHours = 0;
+            forgetItems.forEach(item => {
+                const checkbox = document.getElementById(`forget-${item}`);
+                const hoursInput = document.getElementById(`forget-${item}-hrs`);
+                if (checkbox && checkbox.checked && hoursInput) {
+                    forgetTotalHours += parseFloat(hoursInput.value) || 0;
+                }
+            });
+
+            // Add forget hours to recommended labor (at full billable rate)
+            const forgetValue = forgetTotalHours * billableRateCrew;
+            laborRecTotal += forgetValue;
+            recTotalHours += forgetTotalHours;
+
+            // Update Don't Forget totals display
+            document.getElementById('forgetTotalHours').textContent = forgetTotalHours.toFixed(1) + ' hrs';
+            document.getElementById('forgetTotalValue').textContent = formatCurrency(forgetValue);
+
             document.getElementById('laborYourTotal').textContent = formatCurrency(laborYourTotal);
             document.getElementById('laborRecTotal').textContent = formatCurrency(laborRecTotal);
 
@@ -1270,6 +2007,14 @@
                 laborId = 0;
                 document.getElementById('suppliesContainer').innerHTML = '';
                 document.getElementById('laborContainer').innerHTML = '';
+                
+                // Reset Don't Forget checkboxes
+                const forgetItems = ['travel', 'pickup', 'meeting', 'setup', 'dump', 'permit', 'estimate', 'phone', 'weather', 'warranty'];
+                forgetItems.forEach(item => {
+                    const checkbox = document.getElementById(`forget-${item}`);
+                    if (checkbox) checkbox.checked = false;
+                });
+                
                 calculate();
             }
         }
@@ -1351,6 +2096,42 @@
                         <td>${formatCurrency(total)}</td>
                     `;
                     laborBody.appendChild(row);
+                }
+            });
+
+            // Add "Don't Forget" items to labor (with friendly names for client)
+            const forgetLabels = {
+                'travel': 'Travel & Transportation',
+                'pickup': 'Material Procurement',
+                'meeting': 'Project Consultation',
+                'setup': 'Site Setup & Cleanup',
+                'dump': 'Debris Removal & Disposal',
+                'permit': 'Permit & Inspection Coordination',
+                'estimate': 'Project Planning',
+                'phone': 'Project Coordination',
+                'weather': 'Schedule Contingency',
+                'warranty': 'Quality Assurance'
+            };
+
+            const forgetItems = ['travel', 'pickup', 'meeting', 'setup', 'dump', 'permit', 'estimate', 'phone', 'weather', 'warranty'];
+            
+            forgetItems.forEach(item => {
+                const checkbox = document.getElementById(`forget-${item}`);
+                const hoursInput = document.getElementById(`forget-${item}-hrs`);
+                if (checkbox && checkbox.checked && hoursInput) {
+                    const hours = parseFloat(hoursInput.value) || 0;
+                    if (hours > 0) {
+                        const total = hours * billableRateCrew;
+                        laborTotal += total;
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${forgetLabels[item]}</td>
+                            <td>${hours.toFixed(1)}</td>
+                            <td>${formatCurrency(total)}</td>
+                        `;
+                        laborBody.appendChild(row);
+                    }
                 }
             });
 
