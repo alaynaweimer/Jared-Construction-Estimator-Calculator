@@ -6,6 +6,166 @@
     <title>Hells Canyon Handyman Services Job Estimator</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Print Styles */
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                font-size: 12pt;
+            }
+            
+            .header, .project-name-section, .section, .comparison, .reset-btn, .print-btn-container {
+                display: none !important;
+            }
+            
+            .print-estimate {
+                display: block !important;
+                padding: 20px;
+                font-family: 'Work Sans', Arial, sans-serif;
+            }
+            
+            .print-estimate h1 {
+                font-family: 'Archivo Black', Arial, sans-serif;
+                font-size: 24pt;
+                margin-bottom: 5px;
+                color: black;
+            }
+            
+            .print-estimate .subtitle {
+                font-size: 11pt;
+                color: #666;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+                border-bottom: 2px solid #333;
+            }
+            
+            .print-estimate .project-info {
+                margin-bottom: 25px;
+            }
+            
+            .print-estimate .project-info h2 {
+                font-size: 16pt;
+                margin-bottom: 5px;
+            }
+            
+            .print-estimate .project-info .date {
+                font-size: 10pt;
+                color: #666;
+            }
+            
+            .print-estimate table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 25px;
+            }
+            
+            .print-estimate th {
+                background: #f0f0f0 !important;
+                padding: 10px;
+                text-align: left;
+                font-size: 10pt;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-bottom: 2px solid #333;
+            }
+            
+            .print-estimate th:last-child {
+                text-align: right;
+            }
+            
+            .print-estimate td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                font-size: 11pt;
+            }
+            
+            .print-estimate td:last-child {
+                text-align: right;
+                font-family: 'JetBrains Mono', monospace;
+            }
+            
+            .print-estimate .section-total {
+                background: #f5f5f5 !important;
+                font-weight: bold;
+            }
+            
+            .print-estimate .grand-total {
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 3px solid #333;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .print-estimate .grand-total-label {
+                font-size: 14pt;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .print-estimate .grand-total-value {
+                font-family: 'Archivo Black', Arial, sans-serif;
+                font-size: 24pt;
+            }
+            
+            .print-estimate .footer {
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 1px solid #ddd;
+                font-size: 9pt;
+                color: #666;
+            }
+            
+            .print-estimate .footer p {
+                margin-bottom: 5px;
+            }
+            
+            .print-estimate .validity {
+                margin-top: 15px;
+                font-style: italic;
+            }
+        }
+        
+        /* Hide print estimate on screen */
+        .print-estimate {
+            display: none;
+        }
+        
+        /* Print button styling */
+        .print-btn-container {
+            margin: 16px;
+        }
+        
+        .print-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .print-btn:active {
+            transform: scale(0.98);
+        }
+
         :root {
             --bg-primary: #1a1a1a;
             --bg-secondary: #252525;
@@ -776,6 +936,71 @@
         </div>
     </section>
 
+    <!-- Print Button -->
+    <div class="print-btn-container">
+        <button class="print-btn" onclick="printEstimate()">
+            🖨️ PRINT ESTIMATE FOR CLIENT
+        </button>
+    </div>
+
+    <!-- Print-only Estimate (hidden on screen) -->
+    <div class="print-estimate" id="printEstimate">
+        <h1>HELLS CANYON HANDYMAN SERVICES</h1>
+        <div class="subtitle">Professional Handyman & Construction Services</div>
+        
+        <div class="project-info">
+            <h2 id="printProjectName">Project Estimate</h2>
+            <div class="date" id="printDate"></div>
+        </div>
+        
+        <table id="printMaterialsTable">
+            <thead>
+                <tr>
+                    <th>Materials & Supplies</th>
+                    <th>Qty</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="printMaterialsBody">
+            </tbody>
+            <tfoot>
+                <tr class="section-total">
+                    <td colspan="2">Materials Subtotal</td>
+                    <td id="printMaterialsTotal">$0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <table id="printLaborTable">
+            <thead>
+                <tr>
+                    <th>Labor & Services</th>
+                    <th>Est. Hours</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="printLaborBody">
+            </tbody>
+            <tfoot>
+                <tr class="section-total">
+                    <td colspan="2">Labor Subtotal</td>
+                    <td id="printLaborTotal">$0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="grand-total">
+            <span class="grand-total-label">Estimate Total</span>
+            <span class="grand-total-value" id="printGrandTotal">$0.00</span>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Hells Canyon Handyman Services</strong></p>
+            <p>Thank you for the opportunity to provide this estimate.</p>
+            <p class="validity">This estimate is valid for 30 days from the date shown above.</p>
+        </div>
+    </div>
+
     <button class="reset-btn" onclick="resetProject()">🗑️ Clear Project & Start New</button>
 
     <script>
@@ -1047,6 +1272,99 @@
                 document.getElementById('laborContainer').innerHTML = '';
                 calculate();
             }
+        }
+
+        function printEstimate() {
+            // Get settings for calculations
+            const overheadPct = (parseFloat(document.getElementById('overheadPct').value) || 0) / 100;
+            const profitPct = (parseFloat(document.getElementById('profitPct').value) || 0) / 100;
+            const materialMarkup = (parseFloat(document.getElementById('materialMarkup').value) || 0) / 100;
+            const contingencyPct = (parseFloat(document.getElementById('contingencyPct').value) || 0) / 100;
+            const timeBuffer = (parseFloat(document.getElementById('timeBuffer').value) || 0) / 100;
+            const baseRate = parseFloat(document.getElementById('baseRate').value) || 0;
+            const helperRate = parseFloat(document.getElementById('helperRate').value) || 0;
+            const numHelpers = parseInt(document.getElementById('numHelpers').value) || 0;
+
+            // Calculate billable rate
+            const loadedCost = baseRate * (1 + overheadPct);
+            const billableRate = loadedCost * (1 + profitPct);
+            const helperBillable = helperRate * (1 + overheadPct) * (1 + profitPct);
+            const billableRateCrew = billableRate + (helperBillable * numHelpers);
+
+            // Set project name and date
+            const projectName = document.getElementById('projectName').value || 'Project Estimate';
+            document.getElementById('printProjectName').textContent = projectName;
+            
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('printDate').textContent = 'Date: ' + dateStr;
+
+            // Build materials table
+            const materialsBody = document.getElementById('printMaterialsBody');
+            materialsBody.innerHTML = '';
+            let materialsTotal = 0;
+
+            supplies.forEach(s => {
+                const name = document.getElementById(`supply-name-${s.id}`)?.value || '';
+                const qty = parseFloat(document.getElementById(`supply-qty-${s.id}`)?.value) || 0;
+                const cost = parseFloat(document.getElementById(`supply-cost-${s.id}`)?.value) || 0;
+                
+                if (name || qty > 0 || cost > 0) {
+                    const total = qty * cost * (1 + materialMarkup);
+                    materialsTotal += total;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${name || 'Materials'}</td>
+                        <td>${qty > 0 ? qty : '-'}</td>
+                        <td>${formatCurrency(total)}</td>
+                    `;
+                    materialsBody.appendChild(row);
+                }
+            });
+
+            document.getElementById('printMaterialsTotal').textContent = formatCurrency(materialsTotal);
+
+            // Build labor table
+            const laborBody = document.getElementById('printLaborBody');
+            laborBody.innerHTML = '';
+            let laborTotal = 0;
+
+            labor.forEach(l => {
+                const name = document.getElementById(`labor-name-${l.id}`)?.value || '';
+                const hours = parseFloat(document.getElementById(`labor-hours-${l.id}`)?.value) || 0;
+                
+                if (name || hours > 0) {
+                    const recHours = hours * (1 + timeBuffer);
+                    const total = recHours * billableRateCrew;
+                    laborTotal += total;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${name || 'Labor'}</td>
+                        <td>${recHours.toFixed(1)}</td>
+                        <td>${formatCurrency(total)}</td>
+                    `;
+                    laborBody.appendChild(row);
+                }
+            });
+
+            document.getElementById('printLaborTotal').textContent = formatCurrency(laborTotal);
+
+            // Calculate grand total with contingency
+            const subtotal = materialsTotal + laborTotal;
+            const contingency = subtotal * contingencyPct;
+            const grandTotal = subtotal + contingency;
+
+            document.getElementById('printGrandTotal').textContent = formatCurrency(grandTotal);
+
+            // Trigger print
+            window.print();
         }
     </script>
 </body>
