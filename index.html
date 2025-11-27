@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hells Canyon Handyman Services Job Estimator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #252525;
+            --bg-card: #2d2d2d;
+            --bg-input: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-muted: #666666;
+            --accent-yellow: #ffc107;
+            --accent-orange: #ff9800;
+            --good-green: #4caf50;
+            --good-green-bg: rgba(76, 175, 80, 0.15);
+            --bad-red: #f44336;
+            --bad-red-bg: rgba(244, 67, 54, 0.15);
+            --border-color: #444444;
+            --caution-stripe: repeating-linear-gradient(
+                -45deg,
+                #1a1a1a,
+                #1a1a1a 10px,
+                #ffc107 10px,
+                #ffc107 20px
+            );
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            padding: 16px 20px;
+            border-bottom: 4px solid var(--accent-yellow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1::before {
+            content: '⚡';
+            font-size: 1.3rem;
+        }
+
+        /* Sections */
+        .section {
+            margin: 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            background: var(--bg-secondary);
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            user-select: none;
+        }
+
+        .section-header h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-yellow);
+        }
+
+        .section-header .toggle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.collapsed .toggle {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            padding: 16px;
+            display: block;
+        }
+
+        .section-content.hidden {
+            display: none;
+        }
+
+        /* Settings Grid */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .setting-item {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .setting-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .setting-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .setting-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-yellow);
+            text-align: right;
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+        }
+
+        .setting-range {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        /* Calculated Rates */
+        .calculated-rates {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed var(--border-color);
+        }
+
+        .calc-rate {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .calc-rate:last-child {
+            border-bottom: none;
+        }
+
+        .calc-rate-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .calc-rate-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--good-green);
+        }
+
+        /* Item Entry */
+        .item-row {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .item-row-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .item-name {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .item-name::placeholder {
+            color: var(--text-muted);
+        }
+
+        .item-delete {
+            width: 40px;
+            height: 40px;
+            background: var(--bad-red-bg);
+            border: none;
+            border-radius: 6px;
+            color: var(--bad-red);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .item-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-field label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .item-field input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .item-field input:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+        }
+
+        .item-total {
+            background: var(--good-green-bg);
+            border-color: var(--good-green) !important;
+            color: var(--good-green) !important;
+        }
+
+        /* Labor specific */
+        .labor-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .your-hours input {
+            background: var(--bad-red-bg);
+            border-color: rgba(244, 67, 54, 0.3);
+            color: var(--text-primary);
+        }
+
+        .rec-hours input {
+            background: var(--good-green-bg);
+            border-color: rgba(76, 175, 80, 0.3);
+            color: var(--good-green);
+        }
+
+        /* Add Button */
+        .add-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-btn:hover, .add-btn:active {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            background: rgba(255, 193, 7, 0.05);
+        }
+
+        /* Comparison Section */
+        .comparison {
+            margin: 16px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--accent-yellow);
+        }
+
+        .comparison-header {
+            background: var(--caution-stripe);
+            padding: 4px;
+        }
+
+        .comparison-header-inner {
+            background: var(--bg-secondary);
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        .comparison-header h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: var(--border-color);
+            padding: 2px;
+        }
+
+        .comparison-col {
+            background: var(--bg-card);
+            padding: 16px;
+        }
+
+        .comparison-col.yours {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .comparison-col h3 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .comparison-col.yours h3 {
+            color: var(--bad-red);
+        }
+
+        .comparison-col.recommended h3 {
+            color: var(--good-green);
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .comparison-item:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-item span:last-child {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .comparison-total {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .comparison-total-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .comparison-total-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .comparison-col.yours .comparison-total-value {
+            color: var(--bad-red);
+        }
+
+        .comparison-col.recommended .comparison-total-value {
+            color: var(--good-green);
+        }
+
+        /* Difference Banner */
+        .difference-banner {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
+            padding: 20px;
+            text-align: center;
+        }
+
+        .difference-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(0,0,0,0.6);
+            margin-bottom: 4px;
+        }
+
+        .difference-value {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2rem;
+            color: var(--bg-primary);
+        }
+
+        .difference-percent {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: rgba(0,0,0,0.7);
+            margin-top: 4px;
+        }
+
+        /* Totals by category */
+        .section-totals {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            margin-top: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-totals-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .section-totals-values {
+            display: flex;
+            gap: 16px;
+        }
+
+        .section-totals-item {
+            text-align: right;
+        }
+
+        .section-totals-item small {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .section-totals-item span {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .section-totals-item.yours span {
+            color: var(--bad-red);
+        }
+
+        .section-totals-item.recommended span {
+            color: var(--good-green);
+        }
+
+        /* Reset button */
+        .reset-btn {
+            display: block;
+            width: calc(100% - 32px);
+            margin: 16px auto;
+            padding: 14px;
+            background: var(--bad-red-bg);
+            border: 1px solid var(--bad-red);
+            border-radius: 8px;
+            color: var(--bad-red);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Utility */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Project name */
+        .project-name-section {
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .project-name-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .project-name-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .project-name-input:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+        }
+
+        /* Info text */
+        .info-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .info-text strong {
+            color: var(--accent-yellow);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>HELLS CANYON HANDYMAN</h1>
+        <div style="font-size: 0.75rem; color: #a0a0a0; letter-spacing: 2px; margin-top: 4px;">JOB ESTIMATOR</div>
+    </header>
+
+    <div class="project-name-section">
+        <input type="text" class="project-name-input" id="projectName" placeholder="Project name (e.g., YMCA Breezeway)">
+    </div>
+
+    <!-- Settings Section -->
+    <section class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <h2>⚙️ Your Rates</h2>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="section-content">
+            <div class="info-text">
+                These settings are <strong>saved automatically</strong> and sync with your Google Sheet logic.
+            </div>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-label">Your Hourly Rate</div>
+                    <input type="number" class="setting-input" id="baseRate" value="45" step="0.01" oninput="calculate()">
+                    <div class="setting-range">Range: $35-75</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Helper Rate</div>
+                    <input type="number" class="setting-input" id="helperRate" value="25" step="0.01" oninput="calculate()">
+                    <div class="setting-range">Range: $18-35</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label"># Helpers</div>
+                    <input type="number" class="setting-input" id="numHelpers" value="0" step="1" min="0" oninput="calculate()">
+                    <div class="setting-range">Typical job</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Overhead %</div>
+                    <input type="number" class="setting-input" id="overheadPct" value="30" step="1" oninput="calculate()">
+                    <div class="setting-range">Range: 25-40%</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Profit %</div>
+                    <input type="number" class="setting-input" id="profitPct" value="15" step="1" oninput="calculate()">
+                    <div class="setting-range">Range: 10-20%</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Materials Markup %</div>
+                    <input type="number" class="setting-input" id="materialMarkup" value="20" step="1" oninput="calculate()">
+                    <div class="setting-range">Range: 15-25%</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Contingency %</div>
+                    <input type="number" class="setting-input" id="contingencyPct" value="10" step="1" oninput="calculate()">
+                    <div class="setting-range">Range: 10-15%</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Time Buffer</div>
+                    <input type="number" class="setting-input" id="timeBuffer" value="25" step="1" oninput="calculate()">
+                    <div class="setting-range">% added to hours</div>
+                </div>
+            </div>
+
+            <div class="calculated-rates">
+                <div class="calc-rate">
+                    <span class="calc-rate-label">Your Loaded Cost/hr</span>
+                    <span class="calc-rate-value" id="loadedCost">$58.50</span>
+                </div>
+                <div class="calc-rate">
+                    <span class="calc-rate-label">Billable Rate (You)</span>
+                    <span class="calc-rate-value" id="billableRate">$67.28</span>
+                </div>
+                <div class="calc-rate">
+                    <span class="calc-rate-label">Billable Rate (w/ Crew)</span>
+                    <span class="calc-rate-value" id="billableRateCrew">$67.28</span>
+                </div>
+                <div class="calc-rate">
+                    <span class="calc-rate-label">Rate Multiplier</span>
+                    <span class="calc-rate-value" id="multiplier">1.50x</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supplies Section -->
+    <section class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <h2>📦 Supplies</h2>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="section-content">
+            <div class="info-text">
+                Enter your cost — <strong>markup is added automatically</strong> to the recommended estimate.
+            </div>
+            <div id="suppliesContainer"></div>
+            <button class="add-btn" onclick="addSupply()">
+                <span>+</span> Add Supply
+            </button>
+            <div class="section-totals">
+                <span class="section-totals-label">Materials Total</span>
+                <div class="section-totals-values">
+                    <div class="section-totals-item yours">
+                        <small>Your Cost</small>
+                        <span id="suppliesYourTotal">$0</span>
+                    </div>
+                    <div class="section-totals-item recommended">
+                        <small>w/ Markup</small>
+                        <span id="suppliesRecTotal">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Labor Section -->
+    <section class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <h2>🔨 Labor</h2>
+            <span class="toggle">▼</span>
+        </div>
+        <div class="section-content">
+            <div class="info-text">
+                Enter <strong>your estimated hours</strong>. Recommended adds your time buffer and uses the correct billable rate.
+            </div>
+            <div id="laborContainer"></div>
+            <button class="add-btn" onclick="addLabor()">
+                <span>+</span> Add Task
+            </button>
+            <div class="section-totals">
+                <span class="section-totals-label">Labor Total</span>
+                <div class="section-totals-values">
+                    <div class="section-totals-item yours">
+                        <small>Your Est.</small>
+                        <span id="laborYourTotal">$0</span>
+                    </div>
+                    <div class="section-totals-item recommended">
+                        <small>Recommended</small>
+                        <span id="laborRecTotal">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison">
+        <div class="comparison-header">
+            <div class="comparison-header-inner">
+                <h2>⚠️ Estimate Comparison</h2>
+            </div>
+        </div>
+        <div class="comparison-grid">
+            <div class="comparison-col yours">
+                <h3>Your Estimate</h3>
+                <div class="comparison-item">
+                    <span>Materials</span>
+                    <span id="cmpYourMaterials">$0</span>
+                </div>
+                <div class="comparison-item">
+                    <span>Labor</span>
+                    <span id="cmpYourLabor">$0</span>
+                </div>
+                <div class="comparison-item">
+                    <span>Contingency</span>
+                    <span>$0</span>
+                </div>
+                <div class="comparison-total">
+                    <div class="comparison-total-label">Your Total</div>
+                    <div class="comparison-total-value" id="cmpYourTotal">$0</div>
+                </div>
+            </div>
+            <div class="comparison-col recommended">
+                <h3>Recommended</h3>
+                <div class="comparison-item">
+                    <span>Materials</span>
+                    <span id="cmpRecMaterials">$0</span>
+                </div>
+                <div class="comparison-item">
+                    <span>Labor</span>
+                    <span id="cmpRecLabor">$0</span>
+                </div>
+                <div class="comparison-item">
+                    <span>Contingency</span>
+                    <span id="cmpRecContingency">$0</span>
+                </div>
+                <div class="comparison-total">
+                    <div class="comparison-total-label">Should Charge</div>
+                    <div class="comparison-total-value" id="cmpRecTotal">$0</div>
+                </div>
+            </div>
+        </div>
+        <div class="difference-banner">
+            <div class="difference-label">💰 Money Left on Table</div>
+            <div class="difference-value" id="difference">$0</div>
+            <div class="difference-percent" id="differencePercent">0% more than your estimate</div>
+        </div>
+    </section>
+
+    <button class="reset-btn" onclick="resetProject()">🗑️ Clear Project & Start New</button>
+
+    <script>
+        // Data storage
+        let supplies = [];
+        let labor = [];
+        let supplyId = 0;
+        let laborId = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            loadProject();
+            calculate();
+        });
+
+        // Toggle sections
+        function toggleSection(header) {
+            header.classList.toggle('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.toggle('hidden');
+        }
+
+        // Settings persistence
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('estimatorSettings') || '{}');
+            if (settings.baseRate) document.getElementById('baseRate').value = settings.baseRate;
+            if (settings.helperRate) document.getElementById('helperRate').value = settings.helperRate;
+            if (settings.numHelpers !== undefined) document.getElementById('numHelpers').value = settings.numHelpers;
+            if (settings.overheadPct) document.getElementById('overheadPct').value = settings.overheadPct;
+            if (settings.profitPct) document.getElementById('profitPct').value = settings.profitPct;
+            if (settings.materialMarkup) document.getElementById('materialMarkup').value = settings.materialMarkup;
+            if (settings.contingencyPct) document.getElementById('contingencyPct').value = settings.contingencyPct;
+            if (settings.timeBuffer) document.getElementById('timeBuffer').value = settings.timeBuffer;
+        }
+
+        function saveSettings() {
+            const settings = {
+                baseRate: parseFloat(document.getElementById('baseRate').value) || 45,
+                helperRate: parseFloat(document.getElementById('helperRate').value) || 25,
+                numHelpers: parseInt(document.getElementById('numHelpers').value) || 0,
+                overheadPct: parseFloat(document.getElementById('overheadPct').value) || 30,
+                profitPct: parseFloat(document.getElementById('profitPct').value) || 15,
+                materialMarkup: parseFloat(document.getElementById('materialMarkup').value) || 20,
+                contingencyPct: parseFloat(document.getElementById('contingencyPct').value) || 10,
+                timeBuffer: parseFloat(document.getElementById('timeBuffer').value) || 25
+            };
+            localStorage.setItem('estimatorSettings', JSON.stringify(settings));
+        }
+
+        // Project persistence
+        function loadProject() {
+            const project = JSON.parse(localStorage.getItem('currentProject') || '{}');
+            if (project.name) document.getElementById('projectName').value = project.name;
+            if (project.supplies) {
+                project.supplies.forEach(s => {
+                    addSupply(s.name, s.qty, s.cost);
+                });
+            }
+            if (project.labor) {
+                project.labor.forEach(l => {
+                    addLabor(l.name, l.hours);
+                });
+            }
+        }
+
+        function saveProject() {
+            const project = {
+                name: document.getElementById('projectName').value,
+                supplies: supplies.map(s => ({
+                    name: document.getElementById(`supply-name-${s.id}`)?.value || '',
+                    qty: parseFloat(document.getElementById(`supply-qty-${s.id}`)?.value) || 0,
+                    cost: parseFloat(document.getElementById(`supply-cost-${s.id}`)?.value) || 0
+                })),
+                labor: labor.map(l => ({
+                    name: document.getElementById(`labor-name-${l.id}`)?.value || '',
+                    hours: parseFloat(document.getElementById(`labor-hours-${l.id}`)?.value) || 0
+                }))
+            };
+            localStorage.setItem('currentProject', JSON.stringify(project));
+        }
+
+        // Add supply row
+        function addSupply(name = '', qty = '', cost = '') {
+            const id = supplyId++;
+            supplies.push({ id });
+
+            const container = document.getElementById('suppliesContainer');
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.id = `supply-row-${id}`;
+            row.innerHTML = `
+                <div class="item-row-header">
+                    <input type="text" class="item-name" id="supply-name-${id}" placeholder="Item description" value="${name}" oninput="saveProject()">
+                    <button class="item-delete" onclick="removeSupply(${id})">×</button>
+                </div>
+                <div class="item-fields">
+                    <div class="item-field">
+                        <label>Qty</label>
+                        <input type="number" id="supply-qty-${id}" value="${qty}" step="1" min="0" oninput="calculate()">
+                    </div>
+                    <div class="item-field">
+                        <label>Unit Cost</label>
+                        <input type="number" id="supply-cost-${id}" value="${cost}" step="0.01" min="0" oninput="calculate()">
+                    </div>
+                    <div class="item-field">
+                        <label>Total</label>
+                        <input type="text" id="supply-total-${id}" class="item-total" readonly>
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+            calculate();
+        }
+
+        function removeSupply(id) {
+            supplies = supplies.filter(s => s.id !== id);
+            document.getElementById(`supply-row-${id}`).remove();
+            calculate();
+        }
+
+        // Add labor row
+        function addLabor(name = '', hours = '') {
+            const id = laborId++;
+            labor.push({ id });
+
+            const container = document.getElementById('laborContainer');
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.id = `labor-row-${id}`;
+            row.innerHTML = `
+                <div class="item-row-header">
+                    <input type="text" class="item-name" id="labor-name-${id}" placeholder="Task description" value="${name}" oninput="saveProject()">
+                    <button class="item-delete" onclick="removeLabor(${id})">×</button>
+                </div>
+                <div class="labor-fields">
+                    <div class="item-field your-hours">
+                        <label>Your Hours</label>
+                        <input type="number" id="labor-hours-${id}" value="${hours}" step="0.5" min="0" oninput="calculate()">
+                    </div>
+                    <div class="item-field rec-hours">
+                        <label>Recommended Hrs</label>
+                        <input type="text" id="labor-rec-${id}" class="item-total" readonly>
+                    </div>
+                </div>
+            `;
+            container.appendChild(row);
+            calculate();
+        }
+
+        function removeLabor(id) {
+            labor = labor.filter(l => l.id !== id);
+            document.getElementById(`labor-row-${id}`).remove();
+            calculate();
+        }
+
+        // Main calculation
+        function calculate() {
+            saveSettings();
+            saveProject();
+
+            // Get settings
+            const baseRate = parseFloat(document.getElementById('baseRate').value) || 0;
+            const helperRate = parseFloat(document.getElementById('helperRate').value) || 0;
+            const numHelpers = parseInt(document.getElementById('numHelpers').value) || 0;
+            const overheadPct = (parseFloat(document.getElementById('overheadPct').value) || 0) / 100;
+            const profitPct = (parseFloat(document.getElementById('profitPct').value) || 0) / 100;
+            const materialMarkup = (parseFloat(document.getElementById('materialMarkup').value) || 0) / 100;
+            const contingencyPct = (parseFloat(document.getElementById('contingencyPct').value) || 0) / 100;
+            const timeBuffer = (parseFloat(document.getElementById('timeBuffer').value) || 0) / 100;
+
+            // Calculate rates (matching spreadsheet logic)
+            const loadedCost = baseRate * (1 + overheadPct);
+            const billableRate = loadedCost * (1 + profitPct);
+            const helperBillable = helperRate * (1 + overheadPct) * (1 + profitPct);
+            const billableRateCrew = billableRate + (helperBillable * numHelpers);
+            const multiplier = baseRate > 0 ? billableRate / baseRate : 0;
+
+            // Update calculated rates display
+            document.getElementById('loadedCost').textContent = formatCurrency(loadedCost);
+            document.getElementById('billableRate').textContent = formatCurrency(billableRate);
+            document.getElementById('billableRateCrew').textContent = formatCurrency(billableRateCrew);
+            document.getElementById('multiplier').textContent = multiplier.toFixed(2) + 'x';
+
+            // Calculate supplies
+            let suppliesYourTotal = 0;
+            let suppliesRecTotal = 0;
+
+            supplies.forEach(s => {
+                const qty = parseFloat(document.getElementById(`supply-qty-${s.id}`)?.value) || 0;
+                const cost = parseFloat(document.getElementById(`supply-cost-${s.id}`)?.value) || 0;
+                const total = qty * cost;
+                const withMarkup = total * (1 + materialMarkup);
+
+                suppliesYourTotal += total;
+                suppliesRecTotal += withMarkup;
+
+                const totalEl = document.getElementById(`supply-total-${s.id}`);
+                if (totalEl) totalEl.value = formatCurrency(withMarkup);
+            });
+
+            document.getElementById('suppliesYourTotal').textContent = formatCurrency(suppliesYourTotal);
+            document.getElementById('suppliesRecTotal').textContent = formatCurrency(suppliesRecTotal);
+
+            // Calculate labor
+            let laborYourTotal = 0;
+            let laborRecTotal = 0;
+            let yourTotalHours = 0;
+            let recTotalHours = 0;
+
+            labor.forEach(l => {
+                const hours = parseFloat(document.getElementById(`labor-hours-${l.id}`)?.value) || 0;
+                const recHours = hours * (1 + timeBuffer);
+
+                yourTotalHours += hours;
+                recTotalHours += recHours;
+
+                // Your estimate: hours × base rate (what contractors typically do wrong)
+                const yourCost = hours * baseRate;
+                // Recommended: buffered hours × full billable rate with crew
+                const recCost = recHours * billableRateCrew;
+
+                laborYourTotal += yourCost;
+                laborRecTotal += recCost;
+
+                const recEl = document.getElementById(`labor-rec-${l.id}`);
+                if (recEl) recEl.value = recHours.toFixed(1) + ' hrs';
+            });
+
+            document.getElementById('laborYourTotal').textContent = formatCurrency(laborYourTotal);
+            document.getElementById('laborRecTotal').textContent = formatCurrency(laborRecTotal);
+
+            // Comparison
+            const yourSubtotal = suppliesYourTotal + laborYourTotal;
+            const recSubtotal = suppliesRecTotal + laborRecTotal;
+            const recContingency = recSubtotal * contingencyPct;
+            const yourTotal = yourSubtotal;
+            const recTotal = recSubtotal + recContingency;
+
+            document.getElementById('cmpYourMaterials').textContent = formatCurrency(suppliesYourTotal);
+            document.getElementById('cmpYourLabor').textContent = formatCurrency(laborYourTotal);
+            document.getElementById('cmpRecMaterials').textContent = formatCurrency(suppliesRecTotal);
+            document.getElementById('cmpRecLabor').textContent = formatCurrency(laborRecTotal);
+            document.getElementById('cmpRecContingency').textContent = formatCurrency(recContingency);
+            document.getElementById('cmpYourTotal').textContent = formatCurrency(yourTotal);
+            document.getElementById('cmpRecTotal').textContent = formatCurrency(recTotal);
+
+            const difference = recTotal - yourTotal;
+            const diffPercent = yourTotal > 0 ? (difference / yourTotal) * 100 : 0;
+
+            document.getElementById('difference').textContent = formatCurrency(difference);
+            document.getElementById('differencePercent').textContent = 
+                diffPercent > 0 ? `${diffPercent.toFixed(0)}% more than your estimate` : '';
+        }
+
+        function formatCurrency(num) {
+            return '$' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function resetProject() {
+            if (confirm('Clear all project data and start fresh?')) {
+                localStorage.removeItem('currentProject');
+                document.getElementById('projectName').value = '';
+                supplies = [];
+                labor = [];
+                supplyId = 0;
+                laborId = 0;
+                document.getElementById('suppliesContainer').innerHTML = '';
+                document.getElementById('laborContainer').innerHTML = '';
+                calculate();
+            }
+        }
+    </script>
+</body>
+</html>
